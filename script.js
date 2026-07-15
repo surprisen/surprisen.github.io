@@ -155,54 +155,52 @@ function syncCanvasSize() {
   canvas.height = Math.round(size * dpr);
 
   if (ctx) {
+    ctx.imageSmoothingEnabled = false;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 }
 
-function drawCell(x, y, color, inset = 0.1) {
+function drawCell(x, y, color, cellSize, offsetX, offsetY) {
   if (!ctx) return;
 
-  const cellSize = game.boardSize / GRID_SIZE;
-  const pad = cellSize * inset;
   ctx.fillStyle = color;
-  ctx.fillRect(
-    x * cellSize + pad,
-    y * cellSize + pad,
-    cellSize - pad * 2,
-    cellSize - pad * 2,
-  );
+  ctx.fillRect(offsetX + x * cellSize, offsetY + y * cellSize, cellSize, cellSize);
 }
 
 function drawBoard() {
   if (!ctx || !canvas) return;
 
   const size = game.boardSize;
+  const cellSize = Math.max(1, Math.floor(size / GRID_SIZE));
+  const boardSize = cellSize * GRID_SIZE;
+  const offsetX = Math.floor((size - boardSize) / 2);
+  const offsetY = Math.floor((size - boardSize) / 2);
+
   ctx.clearRect(0, 0, size, size);
 
   ctx.fillStyle = "#081019";
   ctx.fillRect(0, 0, size, size);
 
-  const cellSize = size / GRID_SIZE;
-  ctx.strokeStyle = "rgba(255,255,255,0.04)";
+  ctx.strokeStyle = "rgba(255,255,255,0.05)";
   ctx.lineWidth = 1;
 
   for (let i = 0; i <= GRID_SIZE; i += 1) {
-    const pos = Math.round(i * cellSize) + 0.5;
+    const pos = offsetX + i * cellSize + 0.5;
     ctx.beginPath();
-    ctx.moveTo(pos, 0);
-    ctx.lineTo(pos, size);
+    ctx.moveTo(pos, offsetY);
+    ctx.lineTo(pos, offsetY + boardSize);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(0, pos);
-    ctx.lineTo(size, pos);
+    ctx.moveTo(offsetX, pos);
+    ctx.lineTo(offsetX + boardSize, pos);
     ctx.stroke();
   }
 
-  drawCell(game.food.x, game.food.y, "#8bd3ff", 0.18);
+  drawCell(game.food.x, game.food.y, "#8bd3ff", cellSize, offsetX, offsetY);
 
   game.snake.forEach((segment, index) => {
     const color = index === 0 ? "#eaf6ff" : "#51c0ff";
-    drawCell(segment.x, segment.y, color, 0.12);
+    drawCell(segment.x, segment.y, color, cellSize, offsetX, offsetY);
   });
 }
 
@@ -224,9 +222,9 @@ function resetGame(autoStart = false) {
   clearTimeout(game.timerId);
   game.timerId = null;
   game.snake = [
-    { x: 9, y: 10 },
-    { x: 8, y: 10 },
-    { x: 7, y: 10 },
+    { x: 6, y: 10 },
+    { x: 5, y: 10 },
+    { x: 4, y: 10 },
   ];
   game.direction = directions.right;
   game.nextDirection = directions.right;
@@ -434,6 +432,9 @@ function initGame() {
   if (!canvas) return;
 
   ctx = canvas.getContext("2d");
+  if (ctx) {
+    ctx.imageSmoothingEnabled = false;
+  }
   game.best = loadBestScore();
   updateScoreboard();
   bindControls();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="밝은 테마의 반응형 개인 프로페셔널 웹사이트와 테트리스 게임">
+  <meta name="description" content="밝은 테마의 반응형 개인 프로페셔널 웹사이트와 색감 매칭 게임">
   <title>surprisen | Professional Profile</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="script.js"></script>
@@ -69,15 +69,29 @@
       <div class="container">
         <div class="section-heading">
           <p class="eyebrow">Games</p>
-          <h2>테트리스 게임</h2>
+          <h2>색감 매칭 게임</h2>
         </div>
-        <div class="game-shell">
+        <div class="game-shell color-game-shell">
           <div class="game-board-panel">
-            <div class="game-board-frame">
-              <canvas id="tetris-canvas" class="game-canvas" width="360" height="720" aria-label="테트리스 게임 보드"></canvas>
-              <div class="game-overlay" id="game-overlay" hidden>
-                <p id="game-overlay-title" class="overlay-title"></p>
-                <p id="game-overlay-text" class="overlay-text"></p>
+            <div class="game-board-frame color-stage" id="color-stage">
+              <div class="color-stage-header">
+                <span class="color-stage-mark">Color Memory</span>
+                <span class="round-value" id="round-value">Round 01</span>
+              </div>
+              <div class="swatch-pair" id="swatch-pair">
+                <div class="color-swatch target-swatch" id="target-swatch" role="img" aria-label="기억할 목표 색상"></div>
+                <div class="color-swatch selected-swatch" id="selected-swatch" role="img" aria-label="선택한 색상" hidden></div>
+              </div>
+              <div class="color-stage-copy">
+                <p class="color-kicker" id="color-kicker">Remember this color</p>
+                <h3 id="color-title">이 색을 눈에 담아두세요.</h3>
+                <p id="color-hint">시작을 누르면 목표 색상은 사라지고, 여섯 가지 색이 나타납니다.</p>
+              </div>
+              <p class="memory-message" id="memory-message" hidden>방금 본 색과 가장 가까운 색을 골라보세요.</p>
+              <div class="color-palette" id="color-palette" role="group" aria-label="색상 선택 팔레트" hidden>
+                <canvas id="color-picker" class="color-picker" tabindex="0" aria-label="마우스로 색상을 찾아 클릭하는 그라데이션 팔레트"></canvas>
+                <span class="color-picker-cursor" id="color-picker-cursor" aria-hidden="true" hidden></span>
+                <span class="color-picker-preview" id="color-picker-preview" aria-label="현재 가리킨 색상" hidden></span>
               </div>
             </div>
           </div>
@@ -85,16 +99,12 @@
           <aside class="game-info">
             <div class="stats-grid">
               <div class="stat-card">
-                <span>Score</span>
+                <span>Match</span>
                 <strong id="score-value">0</strong>
               </div>
               <div class="stat-card">
                 <span>Best</span>
                 <strong id="best-value">0</strong>
-              </div>
-              <div class="stat-card">
-                <span>Lines</span>
-                <strong id="lines-value">0</strong>
               </div>
               <div class="stat-card">
                 <span>Status</span>
@@ -103,21 +113,19 @@
             </div>
 
             <div class="control-row">
-              <button class="button button-primary" id="start-button" type="button">시작</button>
-              <button class="button button-secondary" id="pause-button" type="button">일시정지</button>
-              <button class="button button-secondary" id="restart-button" type="button">재시작</button>
+              <button class="button button-primary" id="start-button" type="button">팔레트 열기</button>
+              <button class="button button-secondary" id="restart-button" type="button">새 색상</button>
             </div>
 
             <div class="game-copy">
-              <p>방향키 또는 WASD로 블록을 움직이고, 위쪽 키 또는 W/X로 회전합니다.</p>
-              <p>Space는 하드 드롭, P는 일시정지입니다. 모바일에서는 아래 버튼으로 조작하세요.</p>
+              <p>처음 보인 색을 기억한 뒤, 팔레트에서 가장 비슷한 색을 한 번만 선택하세요.</p>
+              <p>색상 간 RGB 거리를 기준으로 유사도를 계산해 0점부터 100점까지 표시합니다.</p>
             </div>
 
-            <div class="dpad" aria-label="테트리스 모바일 조작">
-              <button class="pad-btn pad-up" type="button" data-dir="up" aria-label="블록 회전">↻</button>
-              <button class="pad-btn pad-left" type="button" data-dir="left">←</button>
-              <button class="pad-btn pad-down" type="button" data-dir="down">↓</button>
-              <button class="pad-btn pad-right" type="button" data-dir="right">→</button>
+            <div class="result-card" id="result-card" hidden aria-live="polite">
+              <span class="result-label">Similarity</span>
+              <strong id="result-value">0</strong>
+              <p id="result-message"></p>
             </div>
           </aside>
         </div>
@@ -158,7 +166,7 @@
           </article>
           <article class="info-card">
             <h3>Games</h3>
-            <p>테트리스 게임을 위한 입력, 상태, 점수, 회귀 검증 흐름을 포함.</p>
+            <p>색감 매칭 게임을 위한 선택, 점수, 상태, 회귀 검증 흐름을 포함.</p>
           </article>
         </div>
       </div>

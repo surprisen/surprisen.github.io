@@ -1,16 +1,17 @@
 :root {
   color-scheme: dark;
-  --bg: #070b10;
-  --bg-2: #0c1118;
-  --panel: rgba(17, 24, 39, 0.88);
-  --panel-2: rgba(20, 28, 41, 0.92);
-  --text: #ecf3fb;
-  --muted: #9aa9ba;
-  --line: rgba(255, 255, 255, 0.08);
-  --accent: #8bd3ff;
-  --accent-2: #43b8ff;
-  --shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
-  --radius: 24px;
+  --bg: #060a10;
+  --bg-2: #0d121a;
+  --panel: rgba(18, 26, 39, 0.9);
+  --panel-2: rgba(22, 31, 46, 0.94);
+  --text: #eef5ff;
+  --muted: #9fb0c4;
+  --line: rgba(255, 255, 255, 0.09);
+  --accent: #8de2ff;
+  --accent-2: #ffb4d6;
+  --accent-3: #b8f0b3;
+  --shadow: 0 28px 70px rgba(0, 0, 0, 0.34);
+  --radius: 26px;
   --radius-sm: 18px;
   --max: 1180px;
 }
@@ -30,8 +31,8 @@ body {
   font-family: "Trebuchet MS", "Gill Sans", "Segoe UI", sans-serif;
   line-height: 1.6;
   background:
-    radial-gradient(circle at top, rgba(67, 184, 255, 0.12), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(139, 211, 255, 0.06), transparent 25%),
+    radial-gradient(circle at top, rgba(141, 226, 255, 0.12), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(255, 180, 214, 0.08), transparent 28%),
     linear-gradient(180deg, var(--bg) 0%, #05070b 100%);
 }
 
@@ -158,7 +159,8 @@ button {
 }
 
 .hero {
-  padding-top: 4.5rem;
+  padding-top: 3.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .hero-grid,
@@ -177,7 +179,7 @@ button {
 
 .hero-copy h1 {
   font-size: clamp(2.7rem, 6vw, 5rem);
-  max-width: 11ch;
+  max-width: 10ch;
 }
 
 .section-heading h2 {
@@ -316,6 +318,8 @@ button {
   border-radius: 22px;
   overflow: hidden;
   background:
+    radial-gradient(circle at top left, rgba(255, 180, 214, 0.18), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(141, 226, 255, 0.16), transparent 20%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01)),
     rgba(3, 8, 14, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -451,15 +455,15 @@ button {
 
 @media (min-width: 1041px) {
   .hero {
-    padding-bottom: 3rem;
+    padding-bottom: 1rem;
   }
 
   .section {
-    padding: 3.5rem 0;
+    padding: 3rem 0;
   }
 
   .games-section {
-    padding-top: 1.75rem;
+    padding-top: 0.75rem;
   }
 }
 

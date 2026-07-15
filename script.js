@@ -163,8 +163,18 @@ function syncCanvasSize() {
 function drawCell(x, y, color, cellSize, offsetX, offsetY) {
   if (!ctx) return;
 
+  const radius = Math.max(4, Math.floor(cellSize * 0.28));
+  const px = offsetX + x * cellSize;
+  const py = offsetY + y * cellSize;
   ctx.fillStyle = color;
-  ctx.fillRect(offsetX + x * cellSize, offsetY + y * cellSize, cellSize, cellSize);
+  ctx.beginPath();
+  ctx.moveTo(px + radius, py);
+  ctx.arcTo(px + cellSize, py, px + cellSize, py + cellSize, radius);
+  ctx.arcTo(px + cellSize, py + cellSize, px, py + cellSize, radius);
+  ctx.arcTo(px, py + cellSize, px, py, radius);
+  ctx.arcTo(px, py, px + cellSize, py, radius);
+  ctx.closePath();
+  ctx.fill();
 }
 
 function drawBoard() {
@@ -178,10 +188,13 @@ function drawBoard() {
 
   ctx.clearRect(0, 0, size, size);
 
-  ctx.fillStyle = "#081019";
+  const fillGradient = ctx.createLinearGradient(0, 0, size, size);
+  fillGradient.addColorStop(0, "#08111a");
+  fillGradient.addColorStop(1, "#0d1723");
+  ctx.fillStyle = fillGradient;
   ctx.fillRect(0, 0, size, size);
 
-  ctx.strokeStyle = "rgba(255,255,255,0.05)";
+  ctx.strokeStyle = "rgba(255,255,255,0.055)";
   ctx.lineWidth = 1;
 
   for (let i = 0; i <= GRID_SIZE; i += 1) {
@@ -196,12 +209,33 @@ function drawBoard() {
     ctx.stroke();
   }
 
-  drawCell(game.food.x, game.food.y, "#8bd3ff", cellSize, offsetX, offsetY);
+  drawCell(game.food.x, game.food.y, "#ffb4d6", cellSize, offsetX, offsetY);
 
   game.snake.forEach((segment, index) => {
-    const color = index === 0 ? "#eaf6ff" : "#51c0ff";
+    const color = index === 0 ? "#f7fbff" : index % 2 === 0 ? "#8de2ff" : "#b8f0b3";
     drawCell(segment.x, segment.y, color, cellSize, offsetX, offsetY);
   });
+
+  const head = game.snake[0];
+  if (head) {
+    const headPx = offsetX + head.x * cellSize;
+    const headPy = offsetY + head.y * cellSize;
+    const eyeSize = Math.max(1.5, Math.floor(cellSize * 0.11));
+    const eyeOffsetX = Math.floor(cellSize * 0.27);
+    const eyeOffsetY = Math.floor(cellSize * 0.28);
+
+    ctx.fillStyle = "#ffffff";
+    ctx.beginPath();
+    ctx.arc(headPx + eyeOffsetX, headPy + eyeOffsetY, eyeSize, 0, Math.PI * 2);
+    ctx.arc(headPx + cellSize - eyeOffsetX, headPy + eyeOffsetY, eyeSize, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#2c4b63";
+    ctx.beginPath();
+    ctx.arc(headPx + eyeOffsetX, headPy + eyeOffsetY, Math.max(1, Math.floor(eyeSize * 0.45)), 0, Math.PI * 2);
+    ctx.arc(headPx + cellSize - eyeOffsetX, headPy + eyeOffsetY, Math.max(1, Math.floor(eyeSize * 0.45)), 0, Math.PI * 2);
+    ctx.fill();
+  }
 }
 
 function endGame(reason = "게임 오버") {
